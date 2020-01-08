@@ -25,6 +25,8 @@ class TestTeacherSendHomework:
         self.driver = webdriver.Remote("http://localhost:4723/wd/hub", caps)
         self.driver.implicitly_wait(10)
 
+        self.help_login()
+
     def click_add_button(self):
         TouchAction(self.driver).tap(x=347, y=42).perform()
 
@@ -96,17 +98,20 @@ class TestTeacherSendHomework:
 
         el14.click()
 
-    def test_login(self):
-        el1 = self.driver.find_element_by_ios_predicate("value == '请输入手机号码'")
-        el1.click()
-        el1.send_keys("13918255587")
-        el2 = self.driver.find_element_by_ios_predicate("value == '请输入短信验证码'")
-        el2.click()
-        el2.send_keys("111222")
-        el3 = self.driver.find_element_by_xpath("(//XCUIElementTypeButton[@name=\"登录\"])[1]")
-        el3.click()
-        self.driver.implicitly_wait(10)
-        assert self.driver.find_element_by_ios_predicate("value CONTAINS '练习'")
+    def help_login(self):
+        try:
+            el1 = self.driver.find_element_by_ios_predicate("value == '请输入手机号码'")
+            el1.click()
+            el1.send_keys("13918255587")
+            el2 = self.driver.find_element_by_ios_predicate("value == '请输入短信验证码'")
+            el2.click()
+            el2.send_keys("111222")
+            el3 = self.driver.find_element_by_xpath("(//XCUIElementTypeButton[@name=\"登录\"])[1]")
+            el3.click()
+
+            sleep(10)
+        except:
+            print("已经登录")
 
     def test_SH_gendu(self):
 
@@ -127,6 +132,7 @@ class TestTeacherSendHomework:
         self.assert_homework(homework_name)
 
     def test_SH_gendu_duoju(self):
+
         homework_name = "duoju" + now_to_date()
 
         self.click_add_button()
@@ -144,6 +150,7 @@ class TestTeacherSendHomework:
         self.assert_homework(homework_name)
 
     def test_SH_huiben(self):
+
         homework_name = "huiben" + now_to_date()
 
         self.click_add_button()

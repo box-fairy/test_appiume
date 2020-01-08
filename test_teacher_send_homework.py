@@ -25,6 +25,77 @@ class TestTeacherSendHomework:
         self.driver = webdriver.Remote("http://localhost:4723/wd/hub", caps)
         self.driver.implicitly_wait(10)
 
+    def click_add_button(self):
+        TouchAction(self.driver).tap(x=347, y=42).perform()
+
+    def finish_and_send_homework(self, homework_name):
+
+        # el15 = self.driver.find_element_by_accessibility_id("task record button")
+        # # TouchAction(self.driver).long_press(el15).perform()
+        # el15.click()
+        # TouchAction(self.driver).long_press(el15, None, None, 2000).perform()
+        # time.sleep(3)
+
+        el15 = self.driver.find_element_by_ios_predicate("value == '请输入作业标题'")
+        el15.click()
+        el15.send_keys(homework_name)
+        el16 = self.driver.find_element_by_ios_predicate("value == '请输入作业要求（可选）'")
+        el16.click()
+        el16.send_keys("zuoyeyaoqiu")
+
+        el7 = self.driver.find_element_by_xpath(
+            "//XCUIElementTypeApplication[@name=\"盒精灵教师\"]/XCUIElementTypeWindow["
+            "1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther"
+            "/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther"
+            "/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[5]/XCUIElementTypeTextField")
+        el7.click()
+        el8 = self.driver.find_element_by_xpath("//XCUIElementTypeButton[@name=\"确定\"]")
+        el8.click()
+        el9 = self.driver.find_element_by_xpath(
+            "//XCUIElementTypeApplication[@name=\"盒精灵教师\"]/XCUIElementTypeWindow["
+            "1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther"
+            "/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther"
+            "/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[6]/XCUIElementTypeTextField")
+        el9.click()
+        el10 = self.driver.find_element_by_xpath("//XCUIElementTypeButton[@name=\"确定\"]")
+        el10.click()
+
+        el11 = self.driver.find_element_by_ios_predicate("value BEGINSWITH '缎蜕测试班'")
+        el11.click()
+        el11.click()
+
+        el12 = self.driver.find_element_by_ios_predicate("value == '发布作业'")
+        el12.click()
+
+    def check_gendu_pages(self, page_arr):
+        for i in page_arr:
+            el1 = self.driver.find_element_by_xpath(
+                "(//XCUIElementTypeButton[@name=\"task chapter checkbox\"])[" + str(i) + "]")
+            el1.click()
+        el2 = self.driver.find_element_by_ios_predicate("value == '确定'")
+        el2.click()
+
+    def assert_homework(self, homework_name):
+        assert self.driver.find_element_by_ios_predicate("value == '发布作业成功'")
+
+        sleep(3)
+        assert self.driver.find_element_by_ios_predicate("value CONTAINS '" + homework_name + "'")
+
+    def choose_a_type(self, type_name):
+        el13 = self.driver.find_element_by_ios_predicate("value == '" + type_name + "'")
+        el13.click()
+        sleep(2)
+
+    def choose_a_book(self, book_name):
+        while 1:
+            try:
+                el14 = self.driver.find_element_by_ios_predicate("value == '" + book_name + "'")
+                break
+            except:
+                self.driver.execute_script('mobile: swipe', {'direction': 'up'})
+
+        el14.click()
+
     def test_login(self):
         el1 = self.driver.find_element_by_ios_predicate("value == '请输入手机号码'")
         el1.click()
@@ -37,132 +108,89 @@ class TestTeacherSendHomework:
         self.driver.implicitly_wait(10)
         assert self.driver.find_element_by_ios_predicate("value CONTAINS '练习'")
 
-    def test_send_homework_gendu(self):
+    def test_SH_gendu(self):
 
         homework_name = "gendu" + now_to_date()
-        self.driver.implicitly_wait(5)
-        TouchAction(self.driver).tap(x=347, y=42).perform()
-        el13 = self.driver.find_element_by_ios_predicate("value == '课件跟读'")
-        el13.click()
-        sleep(2)
+
+        self.click_add_button()
+
+        self.choose_a_type("课件跟读")
+
         TouchAction(self.driver).tap(x=187, y=109).perform()
 
-        el14 = self.driver.find_element_by_ios_predicate("value == 'K1-1'")
-        el14.click()
+        self.choose_a_book("K1-1")
 
-        el1 = self.driver.find_element_by_xpath("(//XCUIElementTypeButton[@name=\"task chapter checkbox\"])[3]")
-        el1.click()
-        el2 = self.driver.find_element_by_xpath("(//XCUIElementTypeButton[@name=\"task chapter checkbox\"])[7]")
-        el2.click()
-        el3 = self.driver.find_element_by_xpath("(//XCUIElementTypeButton[@name=\"task chapter checkbox\"])[2]")
-        el3.click()
-        el4 = self.driver.find_element_by_ios_predicate("value == '确定'")
-        el4.click()
+        self.check_gendu_pages([3, 7, 2])
 
-        # el15 = self.driver.find_element_by_accessibility_id("task record button")
-        # # TouchAction(self.driver).long_press(el15).perform()
-        # el15.click()
-        # TouchAction(self.driver).long_press(el15, None, None, 2000).perform()
-        # time.sleep(3)
+        self.finish_and_send_homework(homework_name)
 
-        el5 = self.driver.find_element_by_ios_predicate("value == '请输入作业标题'")
-        el5.click()
-        el5.send_keys(homework_name)
-        el6 = self.driver.find_element_by_ios_predicate("value == '请输入作业要求（可选）'")
-        el6.click()
-        el6.send_keys("zuoyeyaoqiu")
+        self.assert_homework(homework_name)
 
-
-        el7 = self.driver.find_element_by_xpath(
-            "//XCUIElementTypeApplication[@name=\"盒精灵教师\"]/XCUIElementTypeWindow["
-            "1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther"
-            "/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther"
-            "/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[5]/XCUIElementTypeTextField")
-        el7.click()
-        el8 = self.driver.find_element_by_xpath("//XCUIElementTypeButton[@name=\"确定\"]")
-        el8.click()
-        el9 = self.driver.find_element_by_xpath(
-            "//XCUIElementTypeApplication[@name=\"盒精灵教师\"]/XCUIElementTypeWindow["
-            "1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther"
-            "/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther"
-            "/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[6]/XCUIElementTypeTextField")
-        el9.click()
-        el10 = self.driver.find_element_by_xpath("//XCUIElementTypeButton[@name=\"确定\"]")
-        el10.click()
-
-        el11 = self.driver.find_element_by_ios_predicate("value BEGINSWITH '缎蜕测试班'")
-        el11.click()
-        el11.click()
-
-        sleep(2)
-
-        el12 = self.driver.find_element_by_ios_predicate("value == '发布作业'")
-        el12.click()
-
-        assert self.driver.find_element_by_ios_predicate("value == '发布作业成功'")
-
-        sleep(3)
-        assert self.driver.find_element_by_ios_predicate("value CONTAINS '" + homework_name + "'")
-
-    def test_send_homework_gendu_duoju(self):
+    def test_SH_gendu_duoju(self):
         homework_name = "duoju" + now_to_date()
-        self.driver.implicitly_wait(5)
-        TouchAction(self.driver).tap(x=347, y=42).perform()
-        el13 = self.driver.find_element_by_ios_predicate("value == '课件跟读'")
-        el13.click()
-        sleep(2)
+
+        self.click_add_button()
+
+        self.choose_a_type("课件跟读")
+
         TouchAction(self.driver).tap(x=187, y=109).perform()
-        self.driver.execute_script('mobile: swipe', {'direction': 'up'})
-        self.driver.execute_script('mobile: swipe', {'direction': 'up'})
-        el14 = self.driver.find_element_by_ios_predicate("value == 'Big English 1'")
-        el14.click()
 
-        el1 = self.driver.find_element_by_xpath("(//XCUIElementTypeButton[@name=\"task chapter checkbox\"])[3]")
-        el1.click()
-        el2 = self.driver.find_element_by_xpath("(//XCUIElementTypeButton[@name=\"task chapter checkbox\"])[7]")
+        self.choose_a_book("Big English 1")
+
+        self.check_gendu_pages([3, 7, 2])
+
+        self.finish_and_send_homework(homework_name)
+
+        self.assert_homework(homework_name)
+
+    def test_SH_huiben(self):
+        homework_name = "huiben" + now_to_date()
+
+        self.click_add_button()
+
+        self.choose_a_type("课外练习")
+
+        # 按选择类型与内容按钮
+        TouchAction(self.driver).tap(x=187, y=109).perform()
+
+        # 选择【绘本跟读】类型
+        el2 = self.driver.find_element_by_accessibility_id("   绘本跟读")
         el2.click()
-        el3 = self.driver.find_element_by_xpath("(//XCUIElementTypeButton[@name=\"task chapter checkbox\"])[2]")
-        el3.click()
-        el4 = self.driver.find_element_by_ios_predicate("value == '确定'")
-        el4.click()
-        el5 = self.driver.find_element_by_ios_predicate("value == '请输入作业标题'")
-        el5.click()
-        el5.send_keys(homework_name)
-        el6 = self.driver.find_element_by_ios_predicate("value == '请输入作业要求（可选）'")
-        el6.click()
-        el6.send_keys("zuoyeyaoqiu")
-        el7 = self.driver.find_element_by_xpath(
-            "//XCUIElementTypeApplication[@name=\"盒精灵教师\"]/XCUIElementTypeWindow["
-            "1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther"
-            "/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther"
-            "/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[5]/XCUIElementTypeTextField")
-        el7.click()
-        el8 = self.driver.find_element_by_xpath("//XCUIElementTypeButton[@name=\"确定\"]")
-        el8.click()
-        el9 = self.driver.find_element_by_xpath(
-            "//XCUIElementTypeApplication[@name=\"盒精灵教师\"]/XCUIElementTypeWindow["
-            "1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther"
-            "/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther"
-            "/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[6]/XCUIElementTypeTextField")
-        el9.click()
-        el10 = self.driver.find_element_by_xpath("//XCUIElementTypeButton[@name=\"确定\"]")
-        el10.click()
 
-        el11 = self.driver.find_element_by_ios_predicate("value BEGINSWITH '缎蜕测试班'")
-        el11.click()
-        el11.click()
+        self.choose_a_book("First Little Readers C")
 
-        sleep(2)
+        self.check_gendu_pages([5, 2])
 
-        el12 = self.driver.find_element_by_ios_predicate("value == '发布作业'")
-        el12.click()
+        self.finish_and_send_homework(homework_name)
 
-        assert self.driver.find_element_by_ios_predicate("value == '发布作业成功'")
+        self.assert_homework(homework_name)
 
-        sleep(3)
-        assert self.driver.find_element_by_ios_predicate("value CONTAINS '" + homework_name + "'")
+    def test_SH_huiben_duoju(self):
+        homework_name = "hbdj" + now_to_date()
 
-    def test_send_homework_
+        self.click_add_button()
+
+        self.choose_a_type("课外练习")
+
+        # 按选择类型与内容按钮
+        TouchAction(self.driver).tap(x=187, y=109).perform()
+
+        # 选择【绘本跟读】类型
+        el2 = self.driver.find_element_by_accessibility_id("   绘本跟读")
+        el2.click()
+
+        self.choose_a_book("牛津阅读树5")
+
+        self.check_gendu_pages([5, 2])
+
+        self.finish_and_send_homework(homework_name)
+
+        self.assert_homework(homework_name)
+        return
+
+    #
+    # def test_SH_peiyin(self):
+    #     return
 
     def teardown(self):
         self.driver.quit()

@@ -3,6 +3,7 @@ from time import sleep
 
 from appium import webdriver
 from appium.webdriver.common.touch_action import TouchAction
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class TestStudentUI:

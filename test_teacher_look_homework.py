@@ -20,7 +20,7 @@ class TestTeacherLookHomework:
         caps["platformName"] = "iOS"
         caps["deviceName"] = "iPhone 8"
         caps["bundleId"] = "com.box-fairy.boxfairyteacher"
-        caps["platformVersion"] = "13.2"
+        caps["platformVersion"] = "13.3"
 
         self.driver = webdriver.Remote("http://localhost:4723/wd/hub", caps)
         self.driver.implicitly_wait(10)

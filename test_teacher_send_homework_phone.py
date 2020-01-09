@@ -19,9 +19,15 @@ class TestTeacherSendHomework:
         caps = {}
         caps["automationName"] = "XCUITest"
         caps["platformName"] = "iOS"
-        caps["deviceName"] = "iPhone 11"
-        caps["bundleId"] = "com.box-fairy.boxfairyteacher"
-        caps["platformVersion"] = "13.3"
+        # caps["deviceName"] = "Ding's iPhone"
+        # caps["udid"] = "66ed8a83002310937d0999dea7496cc505b42fb2"
+        caps["deviceName"] = "包炯's iPhoneX"
+        caps["udid"] = "dc254a6433fee58bb8ebd0bc4bb69cca578e8ff2"
+        caps["app"] = "/Users/baojiong/Library/Developer/Xcode/DerivedData/boxfairyteacher-elbueuqihgcsbyamlopvtjtwylpp/Build/Products/Debug-iphoneos/boxfairyteacher.app"
+        # caps["platformVersion"] = "12.4"
+
+        caps["xcodeOrgId"] = "8HXUNCJ8HX"
+        caps["xcodeSigningId"] = "iPhone Developer"
         caps["autoAcceptAlerts"] = "true"
 
         self.driver = webdriver.Remote("http://localhost:4723/wd/hub", caps)
@@ -110,14 +116,13 @@ class TestTeacherSendHomework:
 
     def help_login(self):
         if len(self.driver.find_elements_by_ios_predicate("value == '请输入手机号码'")) >= 1:
-            el1 = self.driver.find_element_by_xpath(
-                "//XCUIElementTypeOther[@name=\"欢迎来到盒精灵教师端\"]/XCUIElementTypeTextField[1]")
+            el1 = self.driver.find_element_by_ios_predicate("value == '请输入手机号码'")
             el1.click()
             el1.send_keys("13918255587")
-            el2 = self.driver.find_element_by_xpath(
-                "//XCUIElementTypeOther[@name=\"欢迎来到盒精灵教师端\"]/XCUIElementTypeTextField[2]")
+            el2 = self.driver.find_element_by_ios_predicate("value == '请输入短信验证码'")
+            el2.click()
             el2.send_keys("111222")
-            el3 = self.driver.find_element_by_accessibility_id("登录")
+            el3 = self.driver.find_element_by_xpath("(//XCUIElementTypeButton[@name=\"登录\"])[1]")
             el3.click()
 
             sleep(10)
@@ -249,7 +254,7 @@ class TestTeacherSendHomework:
 
         self.choose_a_book("人教版四年级上")
 
-        self.check_gendu_pages([2, 1])
+        self.check_gendu_pages([2, 7, 3])
 
         self.finish_and_send_homework(homework_name)
 
@@ -276,7 +281,7 @@ class TestTeacherSendHomework:
 
         self.choose_a_book("牛津阅读树3")
 
-        self.check_gendu_pages([2, 6, 1])
+        self.check_gendu_pages([2, 1])
 
         self.finish_and_send_homework(homework_name)
 

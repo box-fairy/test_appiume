@@ -12,7 +12,7 @@ class TestStudentUI:
         caps["platformName"] = "iOS"
         caps["deviceName"] = "iPhone 8"
         caps["bundleId"] = "com.box-fairy.boxfairy"
-        caps["platformVersion"] = "13.2"
+        caps["platformVersion"] = "13.3"
 
         self.driver = webdriver.Remote("http://localhost:4723/wd/hub", caps)
 

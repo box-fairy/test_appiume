@@ -124,6 +124,10 @@ class TestTeacherSendHomework:
         else:
             return
 
+    def test_failed(self):
+        el1 = self.driver.find_element_by_ios_predicate("value == '自动失败'")
+        el1.click()
+
     # def test_SH_gendu(self):
     #
     #     homework_name = "gendu" + now_to_date()

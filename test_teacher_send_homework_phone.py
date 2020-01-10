@@ -19,16 +19,16 @@ class TestTeacherSendHomework:
         caps = {}
         caps["automationName"] = "XCUITest"
         caps["platformName"] = "iOS"
-        # caps["deviceName"] = "Ding's iPhone"
-        # caps["udid"] = "66ed8a83002310937d0999dea7496cc505b42fb2"
         caps["deviceName"] = "包炯's iPhoneX"
         caps["udid"] = "dc254a6433fee58bb8ebd0bc4bb69cca578e8ff2"
         caps["app"] = "/Users/baojiong/Library/Developer/Xcode/DerivedData/boxfairyteacher-elbueuqihgcsbyamlopvtjtwylpp/Build/Products/Debug-iphoneos/boxfairyteacher.app"
-        # caps["platformVersion"] = "12.4"
 
         caps["xcodeOrgId"] = "8HXUNCJ8HX"
         caps["xcodeSigningId"] = "iPhone Developer"
         caps["autoAcceptAlerts"] = "true"
+        # caps["noReset"] = "true"
+        # caps["unicodeKeyboard"] = "true"
+
 
         self.driver = webdriver.Remote("http://localhost:4723/wd/hub", caps)
         self.driver.implicitly_wait(10)
